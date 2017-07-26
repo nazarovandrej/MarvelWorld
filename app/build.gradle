@@ -45,6 +45,10 @@ dependencies {
             [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.9']
     )
 
+    //Retrofit2
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-jackson:2.3.0'
+
     //Guava
     compile group: 'com.google.guava', name: 'guava', version: '20.0'
 
