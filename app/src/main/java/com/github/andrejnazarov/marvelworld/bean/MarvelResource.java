@@ -14,13 +14,13 @@ import java.util.List;
 /**
  * @author Nazarov on 26.07.17.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class MarvelCharacter implements Parcelable {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class MarvelResource implements Parcelable {
 
     public static final ClassCreator CREATOR = new ClassCreator();
 
-    @JsonProperty("name")
-    public String mName;
+    @JsonProperty("title")
+    public String mTitle;
 
     @JsonProperty("description")
     public String mDescription;
@@ -28,25 +28,25 @@ public class MarvelCharacter implements Parcelable {
     @JsonProperty("thumbnail")
     public Thumbnail mThumbnail;
 
+    @JsonProperty("images")
+    public List<Thumbnail> mImages;
+
     @JsonProperty("resourceURI")
     public String mResourceUri;
-
-    @JsonProperty("comics")
-    public Comics mComics;
 
     @JsonProperty("urls")
     public List<MarvelUrl> mUrls;
 
-    public MarvelCharacter() {
+    public MarvelResource() {
         //Empty constructor needed by Jackson
     }
 
-    protected MarvelCharacter(Parcel in) {
-        mName = in.readString();
+    protected MarvelResource(Parcel in) {
+        mTitle = in.readString();
         mDescription = in.readString();
         mThumbnail = in.readParcelable(Thumbnail.class.getClassLoader());
+        mImages = in.createTypedArrayList(Thumbnail.CREATOR);
         mResourceUri = in.readString();
-        mComics = in.readParcelable(Comics.class.getClassLoader());
         mUrls = new ArrayList<>();
         in.readList(mUrls, null);
     }
@@ -60,11 +60,11 @@ public class MarvelCharacter implements Parcelable {
     @JsonIgnore
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mName);
+        dest.writeString(mTitle);
         dest.writeString(mDescription);
         dest.writeParcelable(mThumbnail, flags);
+        dest.writeTypedList(mImages);
         dest.writeString(mResourceUri);
-        dest.writeParcelable(mComics, flags);
         dest.writeList(mUrls);
     }
 
@@ -73,23 +73,23 @@ public class MarvelCharacter implements Parcelable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MarvelCharacter that = (MarvelCharacter) o;
-        return Objects.equal(mName, that.mName) &&
+        MarvelResource that = (MarvelResource) o;
+        return Objects.equal(mTitle, that.mTitle) &&
                 Objects.equal(mDescription, that.mDescription) &&
                 Objects.equal(mThumbnail, that.mThumbnail) &&
+                Objects.equal(mImages, that.mImages) &&
                 Objects.equal(mResourceUri, that.mResourceUri) &&
-                Objects.equal(mComics, that.mComics) &&
                 Objects.equal(mUrls, that.mUrls);
     }
 
     @JsonIgnore
     @Override
     public int hashCode() {
-        return Objects.hashCode(mName,
+        return Objects.hashCode(mTitle,
                 mDescription,
                 mThumbnail,
+                mImages,
                 mResourceUri,
-                mComics,
                 mUrls);
     }
 
@@ -97,24 +97,24 @@ public class MarvelCharacter implements Parcelable {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("mName", mName)
+                .add("mTitle", mTitle)
                 .add("mDescription", mDescription)
                 .add("mThumbnail", mThumbnail)
+                .add("mImages", mImages)
                 .add("mResourceUri", mResourceUri)
-                .add("mComics", mComics)
                 .add("mUrls", mUrls)
                 .toString();
     }
 
-    private static final class ClassCreator implements Creator<MarvelCharacter> {
+    private static final class ClassCreator implements Creator<MarvelResource> {
         @Override
-        public MarvelCharacter createFromParcel(Parcel in) {
-            return new MarvelCharacter(in);
+        public MarvelResource createFromParcel(Parcel in) {
+            return new MarvelResource(in);
         }
 
         @Override
-        public MarvelCharacter[] newArray(int size) {
-            return new MarvelCharacter[size];
+        public MarvelResource[] newArray(int size) {
+            return new MarvelResource[size];
         }
     }
 }

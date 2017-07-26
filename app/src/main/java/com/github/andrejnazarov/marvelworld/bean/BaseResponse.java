@@ -12,7 +12,7 @@ import com.google.common.base.Objects;
  * @author Nazarov on 26.07.17.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class BaseResponse implements Parcelable {
+public class BaseResponse<T> implements Parcelable {
 
     public static final ClassCreator CREATOR = new ClassCreator();
 
@@ -20,7 +20,7 @@ public class BaseResponse implements Parcelable {
     public int mCode;
 
     @JsonProperty("data")
-    public ResponseData mResponseData;
+    public ResponseData<T> mResponseData;
 
     public BaseResponse() {
         //Empty constructor needed by Jackson
