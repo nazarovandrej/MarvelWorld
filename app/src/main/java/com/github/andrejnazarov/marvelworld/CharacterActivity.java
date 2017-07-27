@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.andrejnazarov.marvelworld.adapter.ComicsPagerAdapter;
 import com.github.andrejnazarov.marvelworld.bean.BaseResponse;
 import com.github.andrejnazarov.marvelworld.bean.ComicsItem;
 import com.github.andrejnazarov.marvelworld.bean.MarvelCharacter;
@@ -25,6 +26,7 @@ import com.github.andrejnazarov.marvelworld.net.MarvelService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,10 +93,11 @@ public class CharacterActivity extends AppCompatActivity implements MarvelUrlFra
 
     private void fillUI() {
         Picasso.with(this)
-                .load(mMarvelCharacter.mThumbnail.getFullPath(Thumbnail.LANDSCAPE_INCREDIBLE))
+                .load(mMarvelCharacter.mThumbnail.getFullSize())
                 .into(mImageView);
         mNameTextView.setText(mMarvelCharacter.mName);
         mDescriptionTextView.setText(mMarvelCharacter.mDescription);
+        mViewPager.setVisibility(View.GONE);
     }
 
     private void fillComicsContainer() {
@@ -118,9 +121,9 @@ public class CharacterActivity extends AppCompatActivity implements MarvelUrlFra
     }
 
 
-    private void getResource(String resourseUri) {
+    private void getResource(String resourceUri) {
         mService = ApiClient.getClient().create(MarvelService.class);
-        Call<BaseResponse<MarvelResource>> responseCall = mService.getMarvelResources(resourseUri, 1, HASH, API_KEY);
+        Call<BaseResponse<MarvelResource>> responseCall = mService.getMarvelResources(resourceUri, 1, HASH, API_KEY);
 
         responseCall.enqueue(new Callback<BaseResponse<MarvelResource>>() {
             @Override
@@ -128,7 +131,10 @@ public class CharacterActivity extends AppCompatActivity implements MarvelUrlFra
                 BaseResponse<MarvelResource> baseResponse = response.body();
                 hideProgressBar();
                 if (baseResponse != null) {
-                    // TODO: 27.07.17 viewpager fill out
+                    List<Thumbnail> images = baseResponse.mResponseData.mCharacterList.get(0).mImages;
+                    ComicsPagerAdapter adapter = new ComicsPagerAdapter(getApplicationContext(), images);
+                    mViewPager.setVisibility(View.VISIBLE);
+                    mViewPager.setAdapter(adapter);
                 }
             }
 
