@@ -53,8 +53,10 @@ public class MainActivity extends AppCompatActivity implements CharactersFragmen
 
     @Override
     public void onFragmentInteraction(MarvelCharacter character) {
-        Toast.makeText(this, "here we are " + character.mDescription, Toast.LENGTH_LONG).show();
+        startActivity(CharacterActivity.createExplicitIntent(this, character));
     }
+
+    //region private methods
 
     private void initUI() {
         setSupportActionBar(mToolbar);
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements CharactersFragmen
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
-    private void hideProgresBar() {
+    private void hideProgressBar() {
         mProgressBar.setVisibility(View.GONE);
     }
 
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements CharactersFragmen
             public void onResponse(Call<BaseResponse<MarvelCharacter>> call, Response<BaseResponse<MarvelCharacter>> response) {
                 BaseResponse<MarvelCharacter> baseResponse = response.body();
                 if (baseResponse != null) {
-                    hideProgresBar();
+                    hideProgressBar();
                     showData(new ArrayList<>(baseResponse.mResponseData.mCharacterList));
                 }
             }
@@ -121,11 +123,12 @@ public class MainActivity extends AppCompatActivity implements CharactersFragmen
                 .commit();
     }
 
+    //endregion
 
 //    private void getResource(BaseResponse<MarvelCharacter> response) {
 //        List<MarvelCharacter> list = response.mResponseData.mCharacterList;
 //        MarvelCharacter character = list.get(0);
-//        String resUrl = character.mComics.mComicList.get(0).mResourseUri;
+//        String resUrl = character.mComics.mComicList.get(0).mResourceUri;
 //
 //        Call<BaseResponse<MarvelResource>> responseCall = mService.getMarvelResources(resUrl, 1, HASH, API_KEY);
 //

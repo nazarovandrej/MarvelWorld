@@ -48,7 +48,7 @@ public class MarvelResource implements Parcelable {
         mImages = in.createTypedArrayList(Thumbnail.CREATOR);
         mResourceUri = in.readString();
         mUrls = new ArrayList<>();
-        in.readList(mUrls, null);
+        in.readTypedList(mUrls, MarvelUrl.CREATOR);
     }
 
     @JsonIgnore
@@ -65,7 +65,7 @@ public class MarvelResource implements Parcelable {
         dest.writeParcelable(mThumbnail, flags);
         dest.writeTypedList(mImages);
         dest.writeString(mResourceUri);
-        dest.writeList(mUrls);
+        dest.writeTypedList(mUrls);
     }
 
     @JsonIgnore
